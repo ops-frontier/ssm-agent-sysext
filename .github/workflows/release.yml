@@ -21,9 +21,9 @@ jobs:
         run: |
           mkdir -p amazon-ssm-agent-ext/usr/bin
           curl -fSL \
-            "https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/${{ github.event.inputs.version }}/linux_amd64/amazon-ssm-agent" \
-            -o amazon-ssm-agent-ext/usr/bin/amazon-ssm-agent
-          chmod +x amazon-ssm-agent-ext/usr/bin/amazon-ssm-agent
+            "https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/${{ github.event.inputs.version }}/linux_amd64/amazon-ssm-agent-binaries.tar.gz" \
+            -o amazon-ssm-agent-binaries.tar.gz
+          tar -xzf amazon-ssm-agent-binaries.tar.gz -C amazon-ssm-agent-ext/usr/bin
 
       - name: Install squashfs-tools
         run: sudo apt-get install -y squashfs-tools
