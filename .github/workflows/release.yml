@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Download amazon-ssm-agent binary
         run: |
@@ -32,7 +32,7 @@ jobs:
         run: mksquashfs amazon-ssm-agent-ext/ amazon-ssm-agent.raw -noappend
 
       - name: Create versioned release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ github.event.inputs.version }}
           name: ${{ github.event.inputs.version }}
@@ -40,7 +40,7 @@ jobs:
           make_latest: true
 
       - name: Update latest release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: latest
           name: latest
