@@ -1,0 +1,15 @@
+[Unit]
+Description=Register SSM Agent for On-Premises/Hybrid
+Before=amazon-ssm-agent.service
+# 登録完了ファイルが存在しない場合のみ実行する条件
+ConditionPathExists=!/var/lib/amazon/ssm/Vault/Store/RegistrationKey
+
+[Service]
+Type=oneshot
+# Butane/Ignition 側で生成・配置した環境変数ファイルを読み込む
+EnvironmentFile=-/etc/amazon/ssm/ssm-activation.env
+ExecStart=/usr/bin/amazon-ssm-agent -register -code "${SSM_ACTIVATION_CODE}" -id "${SSM_ACTIVATION_ID}" -region "${AWS_REGION}"
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

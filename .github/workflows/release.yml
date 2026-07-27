@@ -1,0 +1,48 @@
+name: Build and Release amazon-ssm-agent sysext
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'amazon-ssm-agent のバージョン (例: 3.3.4851.0) 有効なバージョンは https://github.com/aws/amazon-ssm-agent/tags で確認できます。'
+        required: true
+        type: string
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download amazon-ssm-agent binary
+        run: |
+          mkdir -p amazon-ssm-agent-ext/usr/bin
+          curl -fSL \
+            "https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/${{ github.event.inputs.version }}/linux_amd64/amazon-ssm-agent" \
+            -o amazon-ssm-agent-ext/usr/bin/amazon-ssm-agent
+          chmod +x amazon-ssm-agent-ext/usr/bin/amazon-ssm-agent
+
+      - name: Install squashfs-tools
+        run: sudo apt-get install -y squashfs-tools
+
+      - name: Create squashfs image
+        run: mksquashfs amazon-ssm-agent-ext/ amazon-ssm-agent.raw -noappend
+
+      - name: Create versioned release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event.inputs.version }}
+          name: ${{ github.event.inputs.version }}
+          files: amazon-ssm-agent.raw
+          make_latest: true
+
+      - name: Update latest release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: latest
+          files: amazon-ssm-agent.raw
+          make_latest: false

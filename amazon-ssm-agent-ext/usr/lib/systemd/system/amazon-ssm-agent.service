@@ -1,0 +1,13 @@
+[Unit]
+Description=amazon-ssm-agent
+After=network-online.target ssm-register.service
+Wants=network-online.target ssm-register.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/amazon-ssm-agent
+Restart=on-failure
+RestartSec=15s
+
+[Install]
+WantedBy=multi-user.target
