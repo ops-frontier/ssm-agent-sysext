@@ -1,5 +1,7 @@
 # ssm-agent-sysext
-SSM Agent を Flatcar Linux で利用するための sysext
+SSM Agent を Flatcar Linux で利用するための sysext です。Flatcar Container Linux にインストールすることでインターネットにポートを公開しなくても Fleet Manager 経由の接続で受け入れることができるようになります。Github Codespaces からオンプレミスのサーバに SSH や K8s API に接続するなどのユースケースを想定しています。
+
+![構成図](./configuration.drawio.svg)
 
 ## 全体像
 systemd-sysext は、指定したディレクトリ構造（イメージ）を /usr などのディレクトリに overlayfs でマージする仕組みです。そのため、以下のようなディレクトリツリーを作成してイメージ化（SquashFS）します。
